@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import React, {useState, useEffect} from 'react';
+import SearchBar from './component/SearchBar'
 import './App.css';
 
 function App() {
+
+  const [productState, setProductState] = useState([]);
+
+  useEffect(() => {
+
+    fetch('https://fakestoreapi.com/products')
+            .then(res => res.json())
+            .then(json => {
+              const newProductState = json.map((product) => {
+                  return product.title
+              })
+            setProductState(newProductState)
+            })
+
+
+  }, [])
+
+  const hasProducts = productState.length > 0
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+    <div>
+          {hasProducts ? <SearchBar Item={productState} /> : "Loading"}
     </div>
   );
 }
